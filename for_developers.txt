@@ -1,4 +1,8 @@
 please do not forget to change the path on the main for parsers - sam
 if you have any questions for usage contact me - sam
-
+- I loaded everything into lists and getter methods will help you carry on,  parse's load logic  will help a lot - sam
 +++ CLASSES ARE IN THE MODEL FOLDER * PARSER METHODS ARE IN PARSER FOLDER * VALIDATOR IS IN SERVICE FOLDER +++ - sam
+- While making the core logic please consider writing a assignedClasroom and examTime instences to the course class -  - sam
+- and export method will be added ( can be attached later no rush ) - sam
+- for List<Course> find a suitable List<Classroom>  ( it is easy to loop through lists and find suitable vars and getting their exact value at that time ) - sam
+FOR conflict check, you can use the student.getId() method for controlling if a student is already in a exam in that specific hour. - sam
