@@ -1,2 +1,4 @@
 please do not forget to change the path on the main for parsers - sam
 if you have any questions for usage contact me - sam
+
++++ CLASSES ARE IN THE MODEL FOLDER * PARSER METHODS ARE IN PARSER FOLDER * VALIDATOR IS IN SERVICE FOLDER +++ - sam
