@@ -4,11 +4,11 @@ package SamProd_Desktop_Application_Project.model;
 import java.util.ArrayList;
 import java.util.List;
 
- //Container class for domain entities. 
+ //Container class for domain entities.  - sam
 
 public class DomainModels {
 
-    // Student entity ( made em all static by purpose ) - Sam
+    // Student entity 
     public static class Student {
         private final String id;
 
