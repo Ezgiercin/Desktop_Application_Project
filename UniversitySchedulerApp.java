@@ -78,16 +78,26 @@ public class UniversitySchedulerApp {
             List<String> errors = validator.validate(students, classrooms, masterCourses, enrolledCourses);
 
             if (errors.isEmpty()) {
-                System.out.println("    SUCCESS: All data is valid.");
-                
-                // [6] Write Output
-                System.out.println("\n[6] Writing Final Output...");
+            System.out.println("    SUCCESS: All data is valid.");
+
+            // [6] Create ExamPeriod configuration (FR3)
+                // TODO: These values will later be read from user input / config
+                int totalDays = 5;      // örnek: 5 gün
+                int slotsPerDay = 4;    // örnek: günde 4 sınav slotu
+
+                ExamPeriod examPeriod = new ExamPeriod(totalDays, slotsPerDay);
+                System.out.println("\n[6] ExamPeriod created: " + examPeriod);
+
+                // İLERDE: scheduler algoritması examPeriod üzerinden çalışacak
+
+                // [7] Write Output
+                System.out.println("\n[7] Writing Final Output...");
                 FinalWriter writer = new FinalWriter();
                 writer.writeOutput(classrooms, students, masterCourses, enrolledCourses, outputPath);
-                
-                // [7] Launch GUI
-                System.out.println("\n[7] Launching GUI...");
-                
+                            
+                // [8] Launch GUI
+                System.out.println("\n[8] Launching GUI...");
+                            
                 List<Student> finalStudents = students;
                 List<Classroom> finalClassrooms = classrooms;
                 List<Course> finalMasterCourses = masterCourses;
@@ -95,10 +105,10 @@ public class UniversitySchedulerApp {
 
                 SwingUtilities.invokeLater(() -> {
                     SchedulerGUI gui = new SchedulerGUI(
-                        finalStudents, 
-                        finalClassrooms, 
-                        finalMasterCourses, 
-                        finalEnrolledCourses
+                            finalStudents,
+                            finalClassrooms,
+                            finalMasterCourses,
+                            finalEnrolledCourses
                     );
                     gui.setVisible(true);
                 });
@@ -107,9 +117,5 @@ public class UniversitySchedulerApp {
                 System.out.println("    WARNING: Found " + errors.size() + " inconsistencies. Files will NOT be written.");
                 errors.forEach(e -> System.out.println("      - " + e));
             }
-
-        } catch (DataImportException e) {
-            e.printStackTrace();
-        }
-    }
-}
+                }
+            }
