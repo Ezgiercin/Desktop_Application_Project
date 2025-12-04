@@ -4,8 +4,7 @@ package SamProd_Desktop_Application_Project.model;
 import java.util.ArrayList;
 import java.util.List;
 
- //Container class for domain entities.  - sam
-
+// Container class for domain entities.  - sam
 public class DomainModels {
 
     // Student entity 
@@ -25,7 +24,6 @@ public class DomainModels {
         public String toString() { return "Student{id='" + id + "'}"; }
     }
 
-    
     // Course entity
     public static class Course {
         private final String courseCode;
@@ -51,6 +49,37 @@ public class DomainModels {
         @Override
         public String toString() {
             return "Course{code='" + courseCode + "', enrollmentCount=" + enrolledStudents.size() + "}";
+        }
+    }
+
+    //  ExamPeriod entity
+    public static class ExamPeriod {
+
+        private final int totalDays;
+
+        private final int slotsPerDay;
+
+        private final String[][] examMatrix;
+
+        public ExamPeriod(int totalDays, int slotsPerDay) {
+            if (totalDays <= 0 || slotsPerDay <= 0) {
+                throw new IllegalArgumentException("totalDays and slotsPerDay must be positive");
+            }
+            this.totalDays = totalDays;
+            this.slotsPerDay = slotsPerDay;
+            this.examMatrix = new String[totalDays][slotsPerDay]; 
+        }
+
+        public int getTotalDays() {
+            return totalDays;
+        }
+
+        public int getSlotsPerDay() {
+            return slotsPerDay;
+        }
+
+        public String[][] getExamMatrix() {
+            return examMatrix;
         }
     }
 
