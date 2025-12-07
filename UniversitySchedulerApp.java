@@ -5,10 +5,11 @@ import SamProd_Desktop_Application_Project.gui.SchedulerGUI;
 import SamProd_Desktop_Application_Project.model.DomainModels.Classroom;
 import SamProd_Desktop_Application_Project.model.DomainModels.Course;
 import SamProd_Desktop_Application_Project.model.DomainModels.Student;
+import SamProd_Desktop_Application_Project.ExamPeriod; // FIX 1: Added Import
 import SamProd_Desktop_Application_Project.parser.Parser;
 import SamProd_Desktop_Application_Project.parser.impl.CoreParsers;
 import SamProd_Desktop_Application_Project.service.DataValidator;
-import SamProd_Desktop_Application_Project.service.FinalWriter; // Import the new Writer
+import SamProd_Desktop_Application_Project.service.FinalWriter;
 
 import javax.swing.SwingUtilities;
 import java.io.File;
@@ -20,11 +21,13 @@ public class UniversitySchedulerApp {
     public static void main(String[] args) {
         System.out.println("--- Starting University Exam Scheduler Import ---");
 
+        // Note: Consider using relative paths (e.g., "CSV_Files/students.csv") 
+        // so this works on your teammates' computers too.
         File studentFile = new File("C:\\Users\\samal\\Desktop\\SE 302 Project Code\\SamProd_Desktop_Application_Project\\CSV_Files\\students.csv");
         File courseFile = new File("C:\\Users\\samal\\Desktop\\SE 302 Project Code\\SamProd_Desktop_Application_Project\\CSV_Files\\courses.csv");
         File classroomFile = new File("C:\\Users\\samal\\Desktop\\SE 302 Project Code\\SamProd_Desktop_Application_Project\\CSV_Files\\clasrooms.csv");
         File attendanceFile = new File("C:\\Users\\samal\\Desktop\\SE 302 Project Code\\SamProd_Desktop_Application_Project\\CSV_Files\\attendance.csv");
-        
+
         String outputPath = "output/result.txt";
 
         try {
@@ -61,7 +64,7 @@ public class UniversitySchedulerApp {
                 System.out.println("    Master Course file not found.");
             }
 
-            // [4] Parse Attendance 
+            // [4] Parse Attendance
             System.out.println("\n[4] Parsing Attendances...");
             List<Course> enrolledCourses = Collections.emptyList();
             if (attendanceFile.exists()) {
@@ -72,32 +75,29 @@ public class UniversitySchedulerApp {
                 System.out.println("    Attendance file not found.");
             }
 
-            // [5] Data Validation 
+            // [5] Data Validation
             System.out.println("\n[5] Validating Referential Integrity...");
             DataValidator validator = new DataValidator();
             List<String> errors = validator.validate(students, classrooms, masterCourses, enrolledCourses);
 
             if (errors.isEmpty()) {
-            System.out.println("    SUCCESS: All data is valid.");
+                System.out.println("    SUCCESS: All data is valid.");
 
-            // [6] Create ExamPeriod configuration (FR3)
-                // TODO: These values will later be read from user input / config
-                int totalDays = 5;      // örnek: 5 gün
-                int slotsPerDay = 4;    // örnek: günde 4 sınav slotu
+                // [6] Create ExamPeriod configuration (FR3)
+                int totalDays = 5;      
+                int slotsPerDay = 4;    
 
                 ExamPeriod examPeriod = new ExamPeriod(totalDays, slotsPerDay);
                 System.out.println("\n[6] ExamPeriod created: " + examPeriod);
-
                 // İLERDE: scheduler algoritması examPeriod üzerinden çalışacak
-
                 // [7] Write Output
                 System.out.println("\n[7] Writing Final Output...");
                 FinalWriter writer = new FinalWriter();
                 writer.writeOutput(classrooms, students, masterCourses, enrolledCourses, outputPath);
-                            
+
                 // [8] Launch GUI
                 System.out.println("\n[8] Launching GUI...");
-                            
+
                 List<Student> finalStudents = students;
                 List<Classroom> finalClassrooms = classrooms;
                 List<Course> finalMasterCourses = masterCourses;
@@ -117,5 +117,13 @@ public class UniversitySchedulerApp {
                 System.out.println("    WARNING: Found " + errors.size() + " inconsistencies. Files will NOT be written.");
                 errors.forEach(e -> System.out.println("      - " + e));
             }
-                }
-            }
+
+        } catch (DataImportException e) { // FIX 2: Added specific Catch for your custom exception
+            System.err.println("Error importing data: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) { // FIX 3: Added generic Catch for unexpected errors
+            System.err.println("An unexpected error occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}

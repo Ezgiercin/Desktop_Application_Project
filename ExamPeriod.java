@@ -1,3 +1,5 @@
+package SamProd_Desktop_Application_Project;
+
 public class ExamPeriod {
 
     private int totalDays;        // Kaç gün sınav olacak
