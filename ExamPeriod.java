@@ -38,4 +38,12 @@ public class ExamPeriod {
             System.out.println();
         }
     }
+    public boolean assignFixedExam(int day, int slot, String courseCode) {
+        if (examMatrix[day][slot] != null) {
+            return false; // slot dolu
+        }
+        examMatrix[day][slot] = "[FIXED] " + courseCode;
+        return true;
+    }
+
 }

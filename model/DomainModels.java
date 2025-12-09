@@ -105,4 +105,33 @@ public class DomainModels {
         @Override
         public String toString() { return "Classroom{name='" + name + "', capacity=" + capacity + "}"; }
     }
+    // Fixed Exam entity
+    public static class FixedExam {
+        private final String courseCode;
+        private final int day;
+        private final int slot;
+        private final String classroom;
+        private final boolean locked;
+
+        public FixedExam(String courseCode, int day, int slot, String classroom) {
+            this.courseCode = courseCode;
+            this.day = day;
+            this.slot = slot;
+            this.classroom = classroom;
+            this.locked = true; // fixed exam is always locked
+        }
+
+        public String getCourseCode() { return courseCode; }
+        public int getDay() { return day; }
+        public int getSlot() { return slot; }
+        public String getClassroom() { return classroom; }
+        public boolean isLocked() { return locked; }
+
+        @Override
+        public String toString() {
+            return "[Fixed] " + courseCode + " @ Day " + day + ", Slot " + slot + " (" + classroom + ")";
+        }
+    }
+
+
 }

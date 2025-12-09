@@ -2,10 +2,12 @@ package SamProd_Desktop_Application_Project;
 
 import SamProd_Desktop_Application_Project.exception.DataImportException;
 import SamProd_Desktop_Application_Project.gui.SchedulerGUI;
+import SamProd_Desktop_Application_Project.model.DomainModels;
 import SamProd_Desktop_Application_Project.model.DomainModels.Classroom;
 import SamProd_Desktop_Application_Project.model.DomainModels.Course;
 import SamProd_Desktop_Application_Project.model.DomainModels.Student;
 import SamProd_Desktop_Application_Project.ExamPeriod; // FIX 1: Added Import
+import SamProd_Desktop_Application_Project.service.FixedExamService;
 import SamProd_Desktop_Application_Project.parser.Parser;
 import SamProd_Desktop_Application_Project.parser.impl.CoreParsers;
 import SamProd_Desktop_Application_Project.service.DataValidator;
@@ -23,10 +25,10 @@ public class UniversitySchedulerApp {
 
         // Note: Consider using relative paths (e.g., "CSV_Files/students.csv") 
         // so this works on your teammates' computers too.
-        File studentFile = new File("C:\\Users\\samal\\Desktop\\SE 302 Project Code\\SamProd_Desktop_Application_Project\\CSV_Files\\students.csv");
-        File courseFile = new File("C:\\Users\\samal\\Desktop\\SE 302 Project Code\\SamProd_Desktop_Application_Project\\CSV_Files\\courses.csv");
-        File classroomFile = new File("C:\\Users\\samal\\Desktop\\SE 302 Project Code\\SamProd_Desktop_Application_Project\\CSV_Files\\clasrooms.csv");
-        File attendanceFile = new File("C:\\Users\\samal\\Desktop\\SE 302 Project Code\\SamProd_Desktop_Application_Project\\CSV_Files\\attendance.csv");
+        File studentFile = new File("D:\\Desktop_Application_Project\\CSV_Files\\students.csv");
+        File courseFile = new File("D:\\Desktop_Application_Project\\CSV_Files\\courses.csv");
+        File classroomFile = new File("D:\\Desktop_Application_Project\\CSV_Files\\clasrooms.csv");
+        File attendanceFile = new File("D:\\Desktop_Application_Project\\CSV_Files\\attendance.csv");
 
         String outputPath = "output/result.txt";
 
@@ -89,6 +91,34 @@ public class UniversitySchedulerApp {
 
                 ExamPeriod examPeriod = new ExamPeriod(totalDays, slotsPerDay);
                 System.out.println("\n[6] ExamPeriod created: " + examPeriod);
+
+                // [6a] Fixed Exams (FR4–FR13) — dosyadan oku
+                File fixedExamFile = new File("D:\\Desktop_Application_Project\\CSV_Files\\fixed_exams.csv");
+                FixedExamService fixedExamService = new FixedExamService();
+                List<DomainModels.FixedExam> fixedExams = Collections.emptyList();
+
+                if (fixedExamFile.exists()) {
+                    Parser<DomainModels.FixedExam> fixedExamParser = new CoreParsers.FixedExamParser();
+                    fixedExams = fixedExamParser.parse(fixedExamFile);
+
+                    for (DomainModels.FixedExam fx : fixedExams) {
+                        try {
+                            fixedExamService.addFixedExam(fx); // çakışma kontrolü burada
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Conflict detected: " + e.getMessage());
+                        }
+                    }
+                    // Matrisi doldur
+                    for (DomainModels.FixedExam fx : fixedExamService.getFixedExams()) {
+                        boolean assigned = examPeriod.assignFixedExam(fx.getDay() - 1, fx.getSlot() - 1, fx.getCourseCode());
+                        if (!assigned) {
+                            System.out.println("Slot already occupied for " + fx);
+                        }
+                    }
+                    // Matrisi yazdır
+                    examPeriod.printExamSchedule();
+                } else {}
+
                 // İLERDE: scheduler algoritması examPeriod üzerinden çalışacak
                 // [7] Write Output
                 System.out.println("\n[7] Writing Final Output...");
